@@ -9,7 +9,7 @@ app.engine("mustache", require('mustache-express')());
 app.set('view engine', 'mustache');
 app.set('views', __dirname);
 
-app.listen(80);
+app.listen(5190);
 
 app.get('/chapter/:chapter', async (req, res) => {
     const data = await fetch(`https://bato.to/chapter/${req.params.chapter}`).then(data => { return data.text() });
