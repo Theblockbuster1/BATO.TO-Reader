@@ -26,3 +26,5 @@ app.get('/chapter/:chapter', async (req, res) => {
     });
     res.render('index', { images: imagestring, title: title, prevEpi: prevEpi, nextEpi: nextEpi, selector: selector });
 });
+
+console.log('Hosting manga on :5190!');
