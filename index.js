@@ -1,5 +1,9 @@
 const express = require('express');
-const fetch = require('node-fetch');
+const cloudscraper = require('cloudscraper').defaults({
+    agentOptions: {
+      ciphers: 'AES256-SHA'
+    }
+  });
 
 const app = express();
 
@@ -12,7 +16,7 @@ app.set('views', __dirname);
 app.listen(5190);
 
 app.get('/chapter/:chapter', async (req, res) => {
-    const data = await fetch(`https://bato.to/chapter/${req.params.chapter}`).then(data => { return data.text() });
+    const data = await cloudscraper.get(`https://bato.to/chapter/${req.params.chapter}`).then(data => {return data}, console.error);
     const images = JSON.parse(data.match(/const images = (\[.*?\])/i)[1]);
     const prevEpi = JSON.parse((data.match(/const prevEpi = ({.*?})/i) || ['','{"iid":"#"}'])[1]).iid;
     const nextEpi = JSON.parse((data.match(/const nextEpi = ({.*?})/i) || ['','{"iid":"#"}'])[1]).iid;
