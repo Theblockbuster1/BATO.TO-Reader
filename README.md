@@ -4,6 +4,8 @@ A web reader for reading manga from [BATO.TO](https://bato.to).
 
 Supports basic devices such as Kindle web browsers and old browsers as it works without JavaScript support.
 
+![GIF Preview (may take a few seconds to load...)](preview.gif)
+
 ## Installation
 
 0. Install Node.js.
