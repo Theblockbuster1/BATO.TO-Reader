@@ -4,6 +4,7 @@ const cloudscraper = require('cloudscraper').defaults({
       ciphers: 'AES256-SHA'
     }
   });
+const CryptoJS = require("crypto-js");
 
 const app = express();
 
@@ -25,6 +26,9 @@ app.get('/chapter/:chapter', async (req, res) => {
     error = true;
   });
   if (error) return res.status(404).send("An error has occured. Perhaps the chapter you are looking for doesn't exist");
+  const rawServer = data.match(/const server = "(.*?)"/i)[1];
+  const batojs = eval(data.match(/const batojs = (\[.*\])/i)[1]);
+  const server = JSON.parse(CryptoJS.AES.decrypt(rawServer, batojs).toString(CryptoJS.enc.Utf8));
   const images = JSON.parse(data.match(/const images = (\[.*?\])/i)[1]);
   const prevEpi = JSON.parse((data.match(/const prevEpi = ({.*?})/i) || ['','{"iid":"#"}'])[1]).iid;
   const nextEpi = JSON.parse((data.match(/const nextEpi = ({.*?})/i) || ['','{"iid":"#"}'])[1]).iid;
@@ -35,7 +39,7 @@ app.get('/chapter/:chapter', async (req, res) => {
       .replace(/(?<=<select.*?)()(?=>)/i, ' onchange="selectChapter(this)"');
   let imagestring = '';
   images.forEach(i => {
-      imagestring += `<img src="https://xcdn-211.bato.to${i}">`;
+      imagestring += `<img src="${server}${i}">`;
   });
   return res.render('index', { chapter: req.params.chapter, images: imagestring, title: title, seriesName: seriesName, prevEpi: prevEpi, nextEpi: nextEpi, selector: selector });
 });
