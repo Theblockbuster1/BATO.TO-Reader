@@ -5,6 +5,7 @@ const cloudscraper = require('cloudscraper').defaults({
     }
   });
 const CryptoJS = require("crypto-js");
+const expressions = require("angular-expressions");
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.get('/chapter/:chapter', async (req, res) => {
   });
   if (error) return res.status(404).send("An error has occured. Perhaps the chapter you are looking for doesn't exist");
   const rawServer = data.match(/const server = "(.*?)"/i)[1];
-  const batojs = eval(data.match(/const batojs = (\[.*\])/i)[1]);
+  const batojs = expressions.compile(data.match(/const batojs = (\[.*\])/i)[1])();
   const server = JSON.parse(CryptoJS.AES.decrypt(rawServer, batojs).toString(CryptoJS.enc.Utf8));
   const images = JSON.parse(data.match(/const images = (\[.*?\])/i)[1]);
   const prevEpi = JSON.parse((data.match(/const prevEpi = ({.*?})/i) || ['','{"iid":"#"}'])[1]).iid;
