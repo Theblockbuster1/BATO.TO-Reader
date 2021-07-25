@@ -12,7 +12,7 @@
     </style>
     <script>
         function selectChapter(e) {
-            window.location = '/chapter/'+e.value;
+            window.location = '/chapter/{{{urlthing}}}'+e;
         }
     </script>
 </head>
@@ -24,6 +24,12 @@
     <a href="{{prevEpi}}"><button>Previous</button></a>
     <a href="/chapter/{{chapter}}/chapters"><button>Chapter Select</button></a>
     <a href="{{nextEpi}}"><button>Next</button></a>
+    <form>
+        <input type="checkbox" id="split-pages" name="p" value="1"{{splitchecked}}><label for="split-pages"> Split pages</label>
+        <input type="number" id="split-pages-length" name="l" min="1" max="{{imageslength}}" value="{{splitlength}}">
+        <button type="submit">Load</button>
+        {{{count}}}
+    </form>
     {{{images}}}
     {{{selector}}}
     <br>
