@@ -61,18 +61,7 @@ app.get(/\/chapter\/park\/(.*)[^c][^h][^a][^p][^t][^e][^r][^s]$/i, async (req, r
     else prevEpi += `?${new URLSearchParams({ ...req.query, p: 1 }).toString()}`;
   }
   for (const i of images) {
-    const image = await cloudscraper({
-      method: 'GET',
-      url: i.u,
-      encoding: null
-    }).then(body => {
-      let data = "data:" + (mime.lookup(i.u.split('?')[0]) || 'image/webp') + ";base64," + Buffer.from(body).toString('base64');
-      return data;
-    }, err => {
-      console.error(err.response);
-      return i.u;
-    });
-    imagestring += `<img src="${image}">`;
+    imagestring += `<img src="/getImage/${i.u}">`;
   }
   return res.render('index', { chapter: 'park/'+param, images: imagestring, title: title, seriesName: seriesName, prevEpi: prevEpi, nextEpi: nextEpi, selector: selector, urlthing: `park/${mangaName}`, imageslength: imageslength||100, splitlength: req.query.l||16, splitchecked: req.query.p ? ' checked' : '', count: req.query.p ? `${req.query.p}/${imageschunk.length}` : '' });
 });
@@ -157,6 +146,22 @@ app.get('/chapter/:chapter/chapters', async (req, res) => {
       .replace(/(?<!\w)option(?!\w)/gi, 'a')
       .replace(/(?<=<\/a>)/gi, '<br>');
   return res.render('chapters', { title: title, seriesName: seriesName, selector: selector });
+});
+
+app.get('/getImage/*', async (req, res) => {
+  const url = `${req.params[0]}?${new URLSearchParams({ ...req.query }).toString()}`;
+  const image = await cloudscraper({
+    method: 'GET',
+    url: url,
+    encoding: null
+  }).then(data => {
+    return data;
+  }, err => {
+    console.error(err.response);
+    return url;
+  });
+  res.set("Content-Type", mime.lookup(req.params[0]) || 'image/webp');
+  res.send(image);
 });
 
 console.log('Hosting manga on :5190!');
