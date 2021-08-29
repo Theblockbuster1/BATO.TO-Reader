@@ -9,6 +9,7 @@ const CryptoJS = require("crypto-js");
 const expressions = require("angular-expressions");
 const chunk = require('lodash.chunk');
 const mime = require("mime-types");
+const sharp = require('sharp');
 
 const app = express();
 
@@ -150,7 +151,7 @@ app.get('/chapter/:chapter/chapters', async (req, res) => {
 
 app.get('/getImage/*', async (req, res) => {
   const url = `${req.params[0]}?${new URLSearchParams({ ...req.query }).toString()}`;
-  const image = await cloudscraper({
+  let image = await cloudscraper({
     method: 'GET',
     url: url,
     encoding: null
@@ -160,7 +161,12 @@ app.get('/getImage/*', async (req, res) => {
     console.error(err.response);
     return url;
   });
-  res.set("Content-Type", mime.lookup(req.params[0]) || 'image/webp');
+  let mimetype = mime.lookup(req.params[0]) || 'image/jpeg';
+  if (mimetype == 'image/webp') {
+    image = await sharp(image).png().toBuffer();
+    mimetype = 'image/png';
+  }
+  res.set("Content-Type", mimetype);
   res.send(image);
 });
 
