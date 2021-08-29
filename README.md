@@ -20,8 +20,7 @@ e.g. `https://bato.to/chapter/263974` becomes `http://localhost:5190/chapter/263
 
 ## Note
 * There is also support for [v2.mangapark.net](https://v2.mangapark.net) (`https://v2.mangapark.net/manga/{chapter}`)  
-e.g. `https://v2.mangapark.net/manga/phantom-blood/i1364094` becomes `http://localhost:5190/chapter/park/phantom-blood/i1364094`  
-(The longer load times are because the images are being converted to be accessable on the Kindle)
+e.g. `https://v2.mangapark.net/manga/phantom-blood/i1364094` becomes `http://localhost:5190/chapter/park/phantom-blood/i1364094`
 * You can split up chapters into shorter numbers of pages, to make it easier to bookmark longer chapters, with "Split pages" (append `?p=1` to the URL if you can't access the UI)
 * The Chapter Select can be used as an alternative to the Chapter selection menu which may not be supported by some browsers (e.g. Kindle).
 * This uses `cloudscraper` to bypass the Cloudflare security system to get the data.
